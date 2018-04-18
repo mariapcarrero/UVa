@@ -7,24 +7,39 @@ def solve(lista, miniword, minilen):
 	global words, language, dictionary
 	visited = [False for i in range(words*2000)]
 	source = dictionary[language[0]]
-	print('source = ', source)
+	#print('source = ', source)
 	dist = [ INF for i in range(words*2000)]; dist[source] = 0
 	heap = [ (0,'',source)]
 	while len(heap) != 0:
 		d,l, u = heappop(heap)
 		if not (visited[u]):
 			visited[u] = True
+			flag = 0
+			minlocal = INF
 			for v, letra, w in lista[u]:
-				print('firstU = {},v = {}, letra = {}, w = {}'.format(u,v, letra, w))
+				#print('FIRST v = {}, letra = {}, w = {}'.format(v, letra,w))
+				#print(l,letra, d+w, dist[v])
 				if dist[v] >= d+w and l != letra:
-					dist[v] = d+w
-					if v == 9:
-						print('lang = ', dist[9])
-					heappush(heap,(dist[v],letra,v))
-					print('u = {}, v = {}, prevletra = {}, letra = {}, dist[v] = {}'.format(u,v,l, letra, dist[v]))
-	print('l 1 = ',dictionary[language[1]])
-	print(dist[dictionary[language[1]]])
-	print(dist)
+					#print('SECOND')
+					for x, letrax, wei in lista[v]:
+						#print('prevletra = {}, letrax = {}'.format(letra, letrax))
+						#print('v = {}, x = {}, wv = {}, wx = {}'.format(v, x,w,wei))
+						if letra == letrax and x != u:
+							flag = 1
+						if letra == letrax and x != u:
+							prev = 0
+					#print('flah = ',flag)	
+					if prev == 0: 
+						dist[v] = d+w
+						#print('la dist es = ', dist[v])
+						heappush(heap,(dist[v],letra,v))
+					#if v == 9:
+						#print('lang = ', dist[9])
+					
+					#print('u = {}, v = {}, prevletra = {}, letra = {}, dist[v] = {}'.format(u,v,l, letra, dist[v]))
+	#print('l 1 = ',dictionary[language[1]])
+	#print(dist[dictionary[language[1]]])
+	#print(dist)
 	return dist[dictionary[language[1]]]
 
 
@@ -54,13 +69,13 @@ def main():
 				minilen,miniword = longitud, word[0]
 			lista[index1].append((dictionary[save[w][1]], word[0], longitud))
 			lista[index2].append((dictionary[save[w][0]], word[0], longitud))
-		#xprint(lista)
+		#print(lista)
 		#ans = (solve(lista, miniword, minilen))
 		if language[1] not in dictionary or language[0] not in dictionary:
 			print('impossivel')
 		else:
 			ans = (solve(lista, miniword, minilen))
-			if ans == INF:
+			if ans == INF or ans == 0:
 				print('impossivel')
 			else:
 				print(ans)
